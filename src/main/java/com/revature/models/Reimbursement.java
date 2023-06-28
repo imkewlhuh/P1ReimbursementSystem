@@ -22,4 +22,13 @@ public class Reimbursement {
     private int price;
 
     @Column(name = "description")
+    private String description;
+
+    public void setEmployee(Employee employee){
+
+    }
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) default 'Pending'")
+    private String status;
+
 }
