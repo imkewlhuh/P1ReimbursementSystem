@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import com.revature.models.Reimbursement;
+import com.revature.service.EmployeeService;
 import com.revature.service.ReimbursementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,13 +10,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("reimbursements")
+@CrossOrigin(origins = "http://localhost:")
 public class ReimbursementController {
 
     private final ReimbursementService reimbursementService;
+    private final EmployeeService employeeService;
 
     @Autowired
-    public ReimbursementController(ReimbursementService reimbursementService) {
+    public ReimbursementController(ReimbursementService reimbursementService, EmployeeService employeeService) {
         this.reimbursementService = reimbursementService;
+        this.employeeService = employeeService;
     }
 
     @GetMapping
