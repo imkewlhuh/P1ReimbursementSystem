@@ -19,7 +19,7 @@ public class Reimbursement {
     private int id;
 
     @Column(name = "price")
-    private int price;
+    private double price;
 
     @Column(name = "description")
     private String description;

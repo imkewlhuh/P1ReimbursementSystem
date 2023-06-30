@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("reimbursements")
@@ -51,6 +52,21 @@ public class ReimbursementController {
     @PutMapping
     public Reimbursement updateReimbursementHandler(@RequestBody Reimbursement r) {
         return reimbursementService.updateReimbursement(r);
+    }
+
+    @PutMapping("{id}")
+    public Reimbursement resolveReimbursementHandler(@PathVariable("id") int id, @RequestBody Status status) {
+        Status newStatus = statusDao.getByState(status.getState());
+        Reimbursement resolvedReimbursement = reimbursementService.findReimbursementById(id);
+
+        if (Objects.equals(resolvedReimbursement.getStatus().getState(), "pending")) {
+            resolvedReimbursement.setStatus(newStatus);
+            reimbursementService.updateReimbursement(resolvedReimbursement);
+        } else {
+            System.out.println("Reimbursement already resolved!");
+        }
+
+        return resolvedReimbursement;
     }
 
     @DeleteMapping("{id}")

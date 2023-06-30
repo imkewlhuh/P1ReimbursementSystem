@@ -18,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 //AuthController allows us to register and login different people
 @RestController
 @RequestMapping("auth")
@@ -54,10 +56,14 @@ public class AuthController {
         e.setUsername(registerDTO.getUsername());
         e.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
 
-        Role role = roleDao.getByName("Employee");
-        //Todo finish up
-        e.setRole(role);
-        System.out.println(role);
+        if (Objects.equals(registerDTO.getRole(), "Manager")) {
+            e.setRole(roleDao.getByName(registerDTO.getRole()));
+        } else {
+            Role role = roleDao.getByName("Employee");
+            //Todo finish up
+            e.setRole(role);
+        }
+        System.out.println(e.getRole());
         employeeDao.save(e);
 
         return new ResponseEntity<>("Account Registration was successful", HttpStatus.CREATED);
