@@ -47,7 +47,7 @@ export default function EmployeePage() {
 
     return (
         <Container className="pageContainer">
-            <h1 className="mb-3">Welcome {user.firstName ? user.firstName + " - " + user.role.name : "Employee"}</h1>
+            <h1 className="mb-3">{user.firstName ? user.firstName + " - " + user.role.name : "Employee"}</h1>
 
             <button className="mb-3 rsBtn" onClick={handleAdd} type="button">{showAdd ? "Submit" : "Add New"}</button>
             {

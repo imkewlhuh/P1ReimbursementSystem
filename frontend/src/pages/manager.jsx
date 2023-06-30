@@ -33,7 +33,7 @@ export default function ManagerPage() {
 
     return (
         <Container className="pageContainer">
-            <h1>Welcome {user.firstName ? user.firstName + " - " + user.role.name : "Manager"}</h1>
+            <h1>{user.firstName ? user.firstName + " - " + user.role.name : "Manager"}</h1>
             <Table variant="dark">
                 <thead>
                     <tr>
@@ -57,10 +57,10 @@ export default function ManagerPage() {
                                         {reimbursement.status.state}
                                     </td>
                                     <td>
-                                        <button onClick={(e) => handleResolve(e, reimbursement.id, "approved")} type="button" className="rsBtn">
+                                        <button onClick={(e) => handleResolve(e, reimbursement.id, "approved")} type="button" style={{backgroundColor: "green", color: "white"}} className="rsBtn">
                                             Approve
                                         </button>
-                                        <button onClick={(e) => handleResolve(e, reimbursement.id, "denied")} type="button" className="rsBtn mx-2">
+                                        <button onClick={(e) => handleResolve(e, reimbursement.id, "denied")} type="button" style={{backgroundColor: "red", color: "white"}} className="rsBtn mx-2">
                                             Deny
                                         </button>
                                     </td>

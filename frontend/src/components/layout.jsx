@@ -14,6 +14,7 @@ export default function Layout() {
     return (
         <Container className="pageContainer">
             <button onClick={handleLogout} className="mt-3 rsBtn" style={{alignSelf: "flex-end"}} type="button">Log out</button>
+            <h1>Welcome to Reimbursement System</h1>
             <Outlet />
         </Container>
     )
