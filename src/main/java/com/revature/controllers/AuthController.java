@@ -9,8 +9,6 @@ import com.revature.models.Employee;
 import com.revature.models.Role;
 import com.revature.security.JwtGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,7 +36,7 @@ public class AuthController {
 
     private final JwtGenerator jwtGenerator;
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, EmployeeDAO employeeDao, RoleDAO roleDao, StatusDAO statusDao, PasswordEncoder passwordEncoder, JwtGenerator jwtGenerator) {
+    public AuthController(AuthenticationManager authenticationManager, EmployeeDAO employeeDao, RoleDAO roleDao, PasswordEncoder passwordEncoder, JwtGenerator jwtGenerator) {
         this.authenticationManager = authenticationManager;
         this.employeeDao = employeeDao;
         this.roleDao = roleDao;
@@ -60,7 +58,22 @@ public class AuthController {
 
         Role role = roleDao.getByName("Employee");
         //Todo finish up
+        e.setRole(role);
         employeeDao.save(e);
+
+        return new ResponseEntity<>("Account Registration was successful", HttpStatus.CREATED);
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO) {
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword())
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = jwtGenerator.generateToken(authentication);
 
         return new ResponseEntity<AuthResponseDTO>(new AuthResponseDTO(token), HttpStatus.OK);
     }
