@@ -1,15 +1,23 @@
 package com.revature.controllers;
 
 import com.revature.daos.EmployeeDAO;
+import com.revature.daos.RoleDAO;
 import com.revature.daos.StatusDAO;
+import com.revature.dto.AuthResponseDTO;
+import com.revature.dto.LoginDTO;
 import com.revature.dto.RegisterDTO;
 import com.revature.models.Employee;
-import com.revature.models.Status;
+import com.revature.models.Role;
 import com.revature.security.JwtGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,15 +33,18 @@ public class AuthController {
 
     private final EmployeeDAO employeeDao;
 
+    private final RoleDAO roleDao;
+
     private final StatusDAO statusDao;
 
     private final PasswordEncoder passwordEncoder;
 
     private final JwtGenerator jwtGenerator;
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, EmployeeDAO employeeDao, StatusDAO statusDao, PasswordEncoder passwordEncoder, JwtGenerator jwtGenerator) {
+    public AuthController(AuthenticationManager authenticationManager, EmployeeDAO employeeDao, RoleDAO roleDao, StatusDAO statusDao, PasswordEncoder passwordEncoder, JwtGenerator jwtGenerator) {
         this.authenticationManager = authenticationManager;
         this.employeeDao = employeeDao;
+        this.roleDao = roleDao;
         this.statusDao = statusDao;
         this.passwordEncoder = passwordEncoder;
         this.jwtGenerator = jwtGenerator;
@@ -51,12 +62,25 @@ public class AuthController {
         e.setUsername(registerDTO.getUsername());
         e.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
 
-        Status status = StatusDAO.getByState("Employee");
-        //Todo finish up
+        Role role = roleDao.findRoleByTitle("Employee");
+        e.setRole(role);
+        employeeDao.save(e);
+        return new ResponseEntity<>("Employee Registration was successful", HttpStatus.CREATED);
+    }
 
+    @PostMapping("login")
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO){
 
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword() ));
 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return new ResponseEntity<>("Account Registration was successful", HttpStatus.CREATED);
+        String token = jwtGenerator.generateToken(authentication);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        return new ResponseEntity<AuthResponseDTO>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 }
+
