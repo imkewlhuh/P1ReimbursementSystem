@@ -60,7 +60,6 @@ public class AuthController {
             e.setRole(roleDao.getByName(registerDTO.getRole()));
         } else {
             Role role = roleDao.getByName("Employee");
-            //Todo finish up
             e.setRole(role);
         }
         System.out.println(e.getRole());

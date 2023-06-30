@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import com.revature.daos.StatusDAO;
+import com.revature.models.Employee;
 import com.revature.models.Reimbursement;
 import com.revature.models.Status;
 import com.revature.service.EmployeeService;
@@ -42,10 +43,15 @@ public class ReimbursementController {
         return reimbursementService.findReimbursementById(id);
     }
 
-    @PostMapping
-    public Reimbursement createReimbursementHandler(@RequestBody Reimbursement r) {
+    @PostMapping("{id}")
+    public Reimbursement createReimbursementHandler(@PathVariable("id") int id, @RequestBody Reimbursement r) {
+        Employee e = employeeService.getEmployeeById(id);
+        List<Reimbursement> reimbursements = employeeService.getReimbursementsByEmployeeId(id);
         Status status = statusDao.getByState("pending");
         r.setStatus(status);
+        reimbursements.add(r);
+        e.setReimbursements(reimbursements);
+
         return reimbursementService.addReimbursement(r);
     }
 

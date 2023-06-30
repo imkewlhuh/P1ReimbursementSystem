@@ -38,6 +38,11 @@ public class EmployeeController {
         return employeeService.getEmployeeById(id);
     }
 
+    @GetMapping("/current/{username}")
+    public Employee getEmployeeByUsernameHandler(@PathVariable("username") String username) {
+        return employeeService.getEmployeeByUsername(username);
+    }
+
     @PostMapping
     public Employee createEmployeeHandler(@RequestBody Employee e) {
         return employeeService.createEmployee(e);

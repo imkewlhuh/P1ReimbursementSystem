@@ -54,6 +54,10 @@ public class EmployeeService {
         return employeeDao.findById(id).orElseThrow(() -> new EmployeeNotFoundException("No employee found with id:" + id));
     }
 
+    public Employee getEmployeeByUsername(String username){
+        return employeeDao.findByUsername(username).orElseThrow(() -> new EmployeeNotFoundException("No employee found with username:" + username));
+    }
+
     // get all employees
     public List<Employee> getAllEmployees(){
         return employeeDao.findAll();

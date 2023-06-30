@@ -6,6 +6,8 @@ public class AuthResponseDTO {
 
     private String tokenType = "Bearer ";
 
+    private int employeeId;
+
     public AuthResponseDTO(String accessToken) {
         this.accessToken = accessToken;
     }

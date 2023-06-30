@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Auth from './pages/auth';
 import EmployeePage from './pages/employee';
 import ManagerPage from './pages/manager';
+import './App.css'
+import Layout from './components/layout';
 
 const router = createBrowserRouter([
     {
@@ -11,12 +13,18 @@ const router = createBrowserRouter([
         element: <Auth />
     },
     {
-        path: "/employee",
-        element: <EmployeePage />
-    },
-    {
-        path: "/manager",
-        element: <ManagerPage />
+        path: "/home",
+        element: <Layout />,
+        children: [
+            {
+                path: "employee",
+                element: <EmployeePage />
+            },
+            {
+                path: "manager",
+                element: <ManagerPage />
+            }
+        ]
     }
 ])
 
