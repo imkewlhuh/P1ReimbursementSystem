@@ -1,6 +1,8 @@
 package com.revature.controllers;
 
+import com.revature.daos.StatusDAO;
 import com.revature.models.Reimbursement;
+import com.revature.models.Status;
 import com.revature.service.EmployeeService;
 import com.revature.service.ReimbursementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,13 @@ public class ReimbursementController {
     private final ReimbursementService reimbursementService;
     private final EmployeeService employeeService;
 
+    private final StatusDAO statusDao;
+
     @Autowired
-    public ReimbursementController(ReimbursementService reimbursementService, EmployeeService employeeService) {
+    public ReimbursementController(ReimbursementService reimbursementService, EmployeeService employeeService, StatusDAO statusDao) {
         this.reimbursementService = reimbursementService;
         this.employeeService = employeeService;
+        this.statusDao = statusDao;
     }
 
     @GetMapping
@@ -39,6 +44,8 @@ public class ReimbursementController {
 
     @PostMapping
     public Reimbursement createReimbursementHandler(@RequestBody Reimbursement r) {
+        Status status = statusDao.getByState("pending");
+        r.setStatus(status);
         return reimbursementService.addReimbursement(r);
     }
 
