@@ -24,9 +24,9 @@ public class Reimbursement {
     @Column(name = "description")
     private String description;
 
-    public void setEmployee(Employee employee){
-
-    }
+//    public void setEmployee(Employee employee){
+//
+//    }
 
     @ManyToOne
     private Status status;

@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("reimbursements")
-@CrossOrigin(origins = "http://localhost:")
+@CrossOrigin(origins = "http://127.0.0.1:5173/")
 public class ReimbursementController {
 
     private final ReimbursementService reimbursementService;
